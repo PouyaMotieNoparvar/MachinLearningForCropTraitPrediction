@@ -1,0 +1,17 @@
+import h5py
+import numpy as np
+
+
+def dump_calls2csv(name, node):
+    if isinstance(node, h5py.Dataset) and 'calls' in node.name:
+        csvfname = node.name[1:] + '.csv'
+        csvfname = csvfname.replace('/', '_') # create csv file name from path
+        csvfname = csvfname.replace(':', '-') # modify invalid character
+        csvfname = csvfname.replace('?', '#') # modify invalid character
+        arr = node[:]
+        # print ('export data to CSV:', csvfname)
+        np.savetxt(csvfname, arr, fmt='%d', delimiter=',')
+
+
+with h5py.File('C:/Users/Pouya.Noparvar/PycharmProjects/DLLearn/g2f_2017_ZeaGBSv27_Imputed_AGPv4.h5', 'r') as h5r:
+    h5r.visititems(dump_calls2csv)
