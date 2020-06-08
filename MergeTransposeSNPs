@@ -1,0 +1,28 @@
+import glob
+
+########################################################################
+
+def get_file_lines(file_path):
+    with open(file_path) as ff:
+        lines = ff.readlines()
+    return [line.replace("\n", "") for line in lines]
+
+def write_lines_to_file(lines, output_file_path):
+    with open(output_file_path, "w") as ff:
+        ff.writelines(lines)
+
+########################################################################
+
+file_paths = [i for i in glob.glob('Calls/*.csv')]
+# print(*file_paths[:5], sep="\n")
+
+output_lines = []
+output_lines.append(get_file_lines("snpids_transposed.csv")[0] + "\n")
+lnfiles = len(file_paths)
+for ind,file_path in zip(range(1,lnfiles+1), file_paths):
+    print("\r {}/{}".format(ind, lnfiles), end="")
+    output_lines.append("".join("{},".format(st) for st in get_file_lines(file_path))[:-1] + "\n")
+
+print("\n Writing results to file . . . ")
+write_lines_to_file(output_lines, "output.csv")
+print("DONE.")
